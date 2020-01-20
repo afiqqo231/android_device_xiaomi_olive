@@ -15,32 +15,31 @@
 # limitations under the License.
 
 # Inherit from those products. Most specific first.
+# Inherit from those products. Most specific first.
 $(call inherit-product, $(SRC_TARGET_DIR)/product/core_64_bit.mk)
 $(call inherit-product, $(SRC_TARGET_DIR)/product/full_base_telephony.mk)
-@@ -8,16 +23,22 @@ $(call inherit-product, vendor/lineage/config/common_full_phone.mk)
+$(call inherit-product, $(SRC_TARGET_DIR)/product/product_launched_with_p.mk)
+
+
 # Inherit from olive device
-$(call inherit-product, $(LOCAL_PATH)/device.mk)
+$(call inherit-product, device/xiaomi/olive/device.mk)
+$(call inherit-product, vendor/lineage/config/common_full_phone.mk)
 
-PRODUCT_BRAND := xiaomi
-# Set those variables here to overwrite the inherited values.
+
+
 PRODUCT_DEVICE := olive
-PRODUCT_MANUFACTURER := xiaomi
 PRODUCT_NAME := lineage_olive
-PRODUCT_BRAND := xiaomi
+PRODUCT_BRAND := Xiaomi
 PRODUCT_MODEL := Redmi 8
+PRODUCT_MANUFACTURER := Xiaomi
 
-PRODUCT_GMS_CLIENTID_BASE := android-xiaomi
-PRODUCT_MANUFACTURER := xiaomi
-TARGET_VENDOR := xiaomi
-TARGET_VENDOR_PRODUCT_NAME := olive
-PRODUCT_BUILD_PROP_OVERRIDES += PRIVATE_BUILD_DESC="olive-user 9 PKQ1.190319.001 V11.0.1.0.PCNINXM release-keys"
-
-PRODUCT_GMS_CLIENTID_BASE := android-xiaomi
 
 PRODUCT_BUILD_PROP_OVERRIDES += \
-   PRODUCT_NAME=olive \
-   PRIVATE_BUILD_DESC="olive-user 9 PKQ1.190319.001 V11.0.1.0.PCNINXM release-keys"
-
+    TARGET_DEVICE="olive" \
+    PRODUCT_NAME="olive" \
+    PRIVATE_BUILD_DESC="olive-user 9 PKQ1.190319.001 V11.0.1.0.PCNRUXM release-keys"
 
 # Set BUILD_FINGERPRINT variable to be picked up by both system and vendor build.prop
-BUILD_FINGERPRINT := Xiaomi/olive/olive:9/PKQ1.190319.001/V11.0.1.0.PCNINXM:user/release-keys
+BUILD_FINGERPRINT := "Xiaomi/olive_ru/olive:9/PKQ1.190319.001/V11.0.1.0.PCNRUXM:user/release-keys"
+
+TARGET_VENDOR := Xiaomi
