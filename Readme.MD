@@ -1,4 +1,4 @@
-# android_device_zte_xiaomi_olive
+# android_device_xiaomi_olive
 ## Device tree configuration for Olive
 **************************************************************************************
 ## For sync these device/xiaomi/olive you only have to do that:
