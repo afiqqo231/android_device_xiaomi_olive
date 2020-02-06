@@ -93,3 +93,6 @@ PRODUCT_PROPERTY_OVERRIDES +=  \
     persist.service.adb.enable=1 \
     persist.service.debuggable=1 \
     persist.sys.usb.config=mtp,adb
+
+# Brightness
+ persist.sys.qcom-brightness="$(cat /sys/class/leds/lcd-backlight/max_brightness)"
