@@ -50,25 +50,21 @@ TARGET_NO_BOOTLOADER := true
 
 # Kernel
 BOARD_KERNEL_BASE := 0x80000000
-BOARD_KERNEL_IMAGE_NAME := Image.gz-dtb
+BOARD_KERNEL_CMDLINE := console=ttyMSM0,115200,n8
+BOARD_KERNEL_CMDLINE += androidboot.console=ttyMSM0 androidboot.hardware=qcom user_debug=30 msm_rtb.filter=0x237 ehci-hcd.park=3
+BOARD_KERNEL_CMDLINE += androidboot.bootdevice=7824900.sdhci androidboot.usbconfigfs=true androidboot.selinux=permissive androidboot.configfs=true
+BOARD_KERNEL_CMDLINE += lpm_levels.sleep_disabled=1 earlycon=msm_hsl_uart,0x78B0000 vmalloc=300M firmware_class.path=/vendor/firmware_mnt/image  loop.max_part=7
 BOARD_KERNEL_PAGESIZE := 2048
-BOARD_KERNEL_TAGS_OFFSET := 0x01E00000
-BOARD_RAMDISK_OFFSET := 0x02000000
+BOARD_KERNEL_TAGS_OFFSET := 0x00000100
+BOARD_RAMDISK_OFFSET := 0x01000000
 BOARD_BOOTIMG_HEADER_VERSION := 1
 BOARD_MKBOOTIMG_ARGS := --ramdisk_offset $(BOARD_RAMDISK_OFFSET) --tags_offset $(BOARD_KERNEL_TAGS_OFFSET) --header_version $(BOARD_BOOTIMG_HEADER_VERSION)
-TARGET_KERNEL_SOURCE := kernel/xiaomi/olive
-TARGET_USES_UNCOMPRESSED_KERNEL := false
-BOARD_SYSTEMSDK_VERSIONS := 28
-BOARD_VNDK_VERSION := current
+BOARD_KERNEL_IMAGE_NAME := Image.gz-dtb
 TARGET_KERNEL_VERSION := 4.9
-TARGET_KERNEL_APPEND_DTB := true
-BOARD_INCLUDE_RECOVERY_DTBO := true
-BOARD_KERNEL_SEPARATED_DTBO := true
 TARGET_KERNEL_ARCH := arm64
 TARGET_KERNEL_HEADER_ARCH := arm64
-TARGET_KERNEL_CROSS_COMPILE_PREFIX := aarch64-linux-android-
-BOARD_KERNEL_CMDLINE := console=ttyMSM0,115200,n8 androidboot.console=ttyMSM0 androidboot.hardware=qcom msm_rtb.filter=0x237 ehci-hcd.park=3 lpm_levels.sleep_disabled=1 androidboot.bootdevice=7824900.sdhci earlycon=msm_serial_dm,0x78B0000 firmware_class.path=/vendor/firmware_mnt/image androidboot.usbconfigfs=true loop.max_part=7
-TARGET_KERNEL_CONFIG :=  olive-perf_defconfig
+TARGET_KERNEL_SOURCE := kernel/xiaomi/olive
+TARGET_KERNEL_CONFIG := olive-perf_defconfig
 
 # Platform
 TARGET_BOARD_PLATFORM := msm8937
@@ -184,7 +180,7 @@ TARGET_CRYPTFS_HW_PATH := vendor/qcom/opensource/cryptfs_hw
 TARGET_FS_CONFIG_GEN := $(VENDOR_PATH)/config.fs
 
 # HIDL
-#DEVICE_FRAMEWORK_COMPATIBILITY_MATRIX_FILE := $(VENDOR_PATH)/vendor_framework_compatibility_matrix.xml
+DEVICE_FRAMEWORK_COMPATIBILITY_MATRIX_FILE := $(VENDOR_PATH)/vendor_framework_compatibility_matrix.xml
 DEVICE_FRAMEWORK_MANIFEST_FILE := $(VENDOR_PATH)/framework_manifest.xml
 DEVICE_MATRIX_FILE := $(VENDOR_PATH)/compatibility_matrix.xml
 DEVICE_MANIFEST_FILE := $(VENDOR_PATH)/manifest.xml
@@ -200,20 +196,23 @@ BOARD_METADATAIMAGE_PARTITION_SIZE := 65536
 BOARD_PERSISTIMAGE_PARTITION_SIZE := 33554432
 BOARD_RECOVERYIMAGE_PARTITION_SIZE := 67108864
 BOARD_USERDATAIMAGE_PARTITION_SIZE := 1971322880
-BOARD_SYSTEMIMAGE_PARTITION_SIZE := 4831838208
-#BOARD_VENDORIMAGE_PARTITION_SIZE := 1610612736
 BOARD_USES_METADATA_PARTITION := true
-#BOARD_VENDORIMAGE_FILE_SYSTEM_TYPE := ext4
+ENABLE_VENDOR_IMAGE := true
+BOARD_VENDORIMAGE_FILE_SYSTEM_TYPE := ext4
 TARGET_COPY_OUT_VENDOR := vendor
-BOARD_PREBUILT_VENDORIMAGE := $(DEVICE_PATH)/vendor.img
-#BOARD_USES_VENDORIMAGE := true
+BOARD_ROOT_EXTRA_SYMLINKS := \
+    /vendor/firmware_mnt:/firmware \
+    /mnt/vendor/persist:/persist
+BOARD_SYSTEMIMAGE_PARTITION_SIZE := 4831838208
+BOARD_VENDORIMAGE_PARTITION_SIZE := 1610612736
 
 # QCOM
 BOARD_USES_QCOM_HARDWARE := true
 TARGET_USE_SDCLANG := true
 
+
 # Recovery
-TARGET_RECOVERY_FSTAB := $(DEVICE_PATH)/twrp.fstab
+TARGET_RECOVERY_FSTAB := $(VENDOR_PATH)/rootdir/etc/fstab.qcom
 TARGET_USERIMAGES_USE_EXT4 := true
 
 # RIL
@@ -230,9 +229,9 @@ PROTOBUF_SUPPORTED := false
 BOARD_SECCOMP_POLICY := $(VENDOR_PATH)/seccomp
 
 # SELinux
-BOARD_PLAT_PRIVATE_SEPOLICY_DIR += device/qcom/sepolicy/private
-BOARD_PLAT_PUBLIC_SEPOLICY_DIR += device/qcom/sepolicy/public
-BOARD_SEPOLICY_DIRS += device/xiaomi/olive/sepolicy/temp
+include device/qcom/sepolicy/sepolicy.mk
+BOARD_SEPOLICY_DIRS += $(VENDOR_PATH)/sepolicy/vendor
+BOARD_PLAT_PRIVATE_SEPOLICY_DIR += $(VENDOR_PATH)/sepolicy/private
 
 # Sensors
 USE_SENSOR_MULTI_HAL := true

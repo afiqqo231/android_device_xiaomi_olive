@@ -87,6 +87,12 @@ PRODUCT_COPY_FILES += \
     frameworks/native/data/etc/handheld_core_hardware.xml:$(TARGET_COPY_OUT_VENDOR)/etc/permissions/handheld_core_hardware.xml
 
 
+
+
+# Touch HAL
+PRODUCT_PACKAGES += \
+    vendor.lineage.touch@1.0-service.xiaomi_8937
+
 # Additional native libraries
 PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/configs/public.libraries.txt:$(TARGET_COPY_OUT_VENDOR)/etc/public.libraries.txt
@@ -365,7 +371,7 @@ PRODUCT_PACKAGES += \
     init.target.rc \
     fstab.qcom \
     ueventd.qcom.rc \
-    init.recovery.qcom.rc \
+    
 
 
 # RenderScript
