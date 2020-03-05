@@ -1,0 +1,46 @@
+version: 2.1
+jobs:
+  compile:
+   docker:
+      - image: ubuntu:18.04
+   environment:
+      GIT_EMAIL: 'github.afiqqo@gmail.com'
+      GIT_NAME: 'afiqqo231'
+      VERSION: '16.0'
+      LINEAGE_MANIFEST: 'lineage-16.0'
+      VENDOR: 'xiaomi'
+      DEVICE: 'olive'
+   steps:
+      - run:
+          command: |
+           apt-get -y update && apt-get -y upgrade && apt-get -y install bc bison build-essential curl flex g++-multilib gcc gcc-multilib clang git gnupg gperf imagemagick lib32ncurses5-dev lib32readline-dev lib32z1-dev liblz4-tool libncurses5-dev libsdl1.2-dev libwxgtk3.0-dev libxml2 libxml2-utils lzop pngcrush schedtool squashfs-tools xsltproc zip zlib1g-dev unzip openjdk-8-jdk python ccache libtinfo5 repo libstdc++6 wget libssl-dev rsync golang-go
+           mkdir -p ~/bin
+           curl https://storage.googleapis.com/git-repo-downloads/repo > ~/bin/repo
+           chmod a+x ~/bin/repo
+           go get -u github.com/tcnksm/ghr
+           export PATH=/root/go/bin:$PATH
+           git config --global user.email "${GIT_EMAIL}"
+           git config --global user.name "{GIT_NAME}"
+           git config --global color.ui false
+           repo init --depth=1 -u git://github.com/LineageOS/android.git -b ${LINEAGE_MANIFEST}
+           repo sync -c --no-clone-bundle--notags-j4
+           git clone https://github.com/${CIRCLE_PROJECT_USERNAME}/${CIRCLE_PROJECT_REPONAME} -b ${CIRCLE_BRANCH} device/${VENDOR}/${DEVICE}
+           git clone https://github.com/afiqqo231/proprietary_vendor_xiaomi.git -b lineage-16.0 vendor/xiaomi
+           git clone https://github.com/afiqqo231/kernel_olive_lolz.git -b V5 /kernel/xiaomi/olive
+           export USE_CCACHE=1
+           export ALLOW_MISSING_DEPENDENCIES=true
+           export LC_ALL=C
+           source build/envsetup.sh
+           breakfast olive
+           croot
+           brunch olive
+           export BUILDFILE=$(find $(pwd)/out/target/product/${DEVICE}/lineage*.zip 2>/dev/null)
+           export UPLOAD_PATH=$(pwd)/out/target/product/${DEVICE}/upload/
+           mkdir ${UPLOAD_PATH}
+           cp $BUILDFILE $UPLOAD_PATH
+           ghr -t ${GITHUB_TOKEN} -u ${CIRCLE_PROJECT_USERNAME} -r ${CIRCLE_PROJECT_REPONAME} -n "Test Build for $(echo $DEVICE)" -b "LineageOS $(echo $VERSION)" -c ${CIRCLE_SHA1} -delete ${VERSION} ${UPLOAD_PATH}
+workflows:
+  version: 2.1
+  cooking:
+    jobs:
+      - compile
