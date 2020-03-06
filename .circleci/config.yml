@@ -32,9 +32,7 @@ jobs:
            export ALLOW_MISSING_DEPENDENCIES=true
            export LC_ALL=C
            source build/envsetup.sh
-           breakfast olive
-           croot
-           brunch olive
+           lunch lineage_olive-userdebug
            export BUILDFILE=$(find $(pwd)/out/target/product/${DEVICE}/lineage*.zip 2>/dev/null)
            export UPLOAD_PATH=$(pwd)/out/target/product/${DEVICE}/upload/
            mkdir ${UPLOAD_PATH}
