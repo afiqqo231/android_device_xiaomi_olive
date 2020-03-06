@@ -33,6 +33,7 @@ jobs:
            export LC_ALL=C
            source build/envsetup.sh
            lunch lineage_olive-userdebug
+           mka bacon
            export BUILDFILE=$(find $(pwd)/out/target/product/${DEVICE}/lineage*.zip 2>/dev/null)
            export UPLOAD_PATH=$(pwd)/out/target/product/${DEVICE}/upload/
            mkdir ${UPLOAD_PATH}
